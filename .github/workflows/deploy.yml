@@ -18,7 +18,10 @@ jobs:
           corepack enable
           pnpm install
 
-      - name: Deploy to the correct environment
+      - name: Build project
+        run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -26,5 +29,5 @@ jobs:
           branch=$(git rev-parse --abbrev-ref HEAD)
           echo "Current branch: $branch"
           if [[ "$branch" == "master" ]]; then
-            pnpm wrangler deploy --env production
+            pnpm wrangler pages deploy dist --project-name=my-hono-app
           fi
