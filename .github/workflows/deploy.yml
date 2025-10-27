@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      - staging
+      - dev
 
 jobs:
   deploy:
@@ -18,16 +20,20 @@ jobs:
           corepack enable
           pnpm install
 
-      - name: Build project
-        run: pnpm build
-
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to the correct environment
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           branch=$(git rev-parse --abbrev-ref HEAD)
           echo "Current branch: $branch"
-          if [[ "$branch" == "master" ]]; then
-            pnpm wrangler pages deploy dist --project-name=my-hono-app
+          if [[ "$branch" == "main" ]]; then
+           pnpm wrangler pages deploy dist --project-name=my-hono-app --branch=production
+          elif [[ "$branch" == "staging" ]]; then
+            pnpm wrangler pages deploy dist --project-name=my-hono-app --branch=staging
+          elif [[ "$branch" == "dev" ]]; then
+            pnpm wrangler pages deploy dist --project-name=my-hono-app --branch=dev
+          else
+            echo "No matching deployment environment."
+            exit 1
           fi
