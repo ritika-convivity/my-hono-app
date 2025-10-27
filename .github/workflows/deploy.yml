@@ -28,7 +28,7 @@ jobs:
           branch=$(git rev-parse --abbrev-ref HEAD)
           echo "Current branch: $branch"
           if [[ "$branch" == "master" ]]; then
-           pnpm wrangler pages deploy dist --project-name=my-hono-app --branch=production
+           pnpm wrangler pages deploy dist --project-name=my-hono-app --branch=master
           elif [[ "$branch" == "staging" ]]; then
             pnpm wrangler pages deploy dist --project-name=my-hono-app --branch=staging
           elif [[ "$branch" == "dev" ]]; then
