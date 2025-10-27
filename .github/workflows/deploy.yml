@@ -27,3 +27,4 @@ jobs:
           echo "Current branch: $branch"
           if [[ "$branch" == "master" ]]; then
             pnpm wrangler deploy --env production
+          fi
